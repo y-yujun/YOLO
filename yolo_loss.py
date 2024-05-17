@@ -58,8 +58,7 @@ class YoloLoss(nn.Module):
         x1, y1 = x/S - 0.5*w, y/S - 0.5*h ; x2,y2 = x/S + 0.5*w, y/S + 0.5*h
         Note: Over here initially x, y are the center of the box and w,h are width and height.
         """
-        ### CODE ###
-        # Your code here
+
         xyxy = torch.empty_like(boxes)
         xyxy[:, 0] = boxes[:,0] / self.S - 0.5 * boxes[:,2]
         xyxy[:, 1] = boxes[:,1] / self.S - 0.5 * boxes[:,3]
@@ -78,7 +77,6 @@ class YoloLoss(nn.Module):
         best_iou: (tensor) size (-1, 1)
         best_boxes : (tensor) size (-1, 5), containing the boxes which give the best iou among the two (self.B) predictions
 
-        Hints:
         1) Find the iou's of each of the 2 bounding boxes of each grid cell of each image.
         2) For finding iou's use the compute_iou function
         3) use xywh2xyxy to convert bbox format if necessary,
@@ -86,8 +84,6 @@ class YoloLoss(nn.Module):
         We perform this transformation to convert the correct coordinates into bounding box coordinates.
         """
 
-        ### CODE ###
-        # Your code here
         device = 'cuda:0'
         xyxy_box_target = self.xywh2xyxy(box_target)
         best_ious = torch.empty(box_target.size(0))
@@ -113,8 +109,6 @@ class YoloLoss(nn.Module):
         Returns:
         class_loss : scalar
         """
-        ### CODE ###
-        # Your code here
 
         return torch.sum(has_object_map * torch.sum((classes_target - classes_pred) ** 2, dim=3))
 
@@ -127,13 +121,11 @@ class YoloLoss(nn.Module):
         Returns:
         loss : scalar
 
-        Hints:
         1) Only compute loss for cell which doesn't contain object
         2) compute loss for all predictions in the pred_boxes_list list
         3) You can assume the ground truth confidence of non-object cells is 0
         """
-        ### CODE ###
-        # Your code here
+
         # Reference: https://pytorch.org/docs/stable/generated/torch.nn.functional.mse_loss.html
         no_object_map = has_object_map == 0
         loss = 0
@@ -156,8 +148,6 @@ class YoloLoss(nn.Module):
         The box_target_conf should be treated as ground truth, i.e., no gradient
 
         """
-        ### CODE
-        # your code here
 
         return F.mse_loss(box_pred_conf, box_target_conf, reduction='sum')
 
@@ -173,8 +163,7 @@ class YoloLoss(nn.Module):
         reg_loss : scalar
 
         """
-        ### CODE
-        # your code here
+
         # loss1 = self.l_coord * torch.sum((box_target_response[:, 0] - box_pred_response[:, 0]) ** 2 + (box_target_response[:, 1] - box_pred_response[:, 1]) ** 2)
         # loss2 = self.l_coord * torch.sum((torch.sqrt(box_target_response[:, 2]) - torch.sqrt(box_pred_response[:, 2])) ** 2 + (torch.sqrt(box_target_response[:, 3]) - torch.sqrt(box_pred_response[:, 3])))
 
